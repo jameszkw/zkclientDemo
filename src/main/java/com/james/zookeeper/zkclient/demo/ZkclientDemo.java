@@ -2,30 +2,93 @@ package com.james.zookeeper.zkclient.demo;
 
 import java.util.List;
 
+import org.I0Itec.zkclient.IZkChildListener;
+import org.I0Itec.zkclient.IZkDataListener;
+import org.I0Itec.zkclient.IZkStateListener;
 import org.I0Itec.zkclient.ZkClient;
 import org.apache.zookeeper.CreateMode;
+import org.apache.zookeeper.Watcher.Event.KeeperState;
 
 public class ZkclientDemo {
-	public static void main(String[] args) {
-		String serverList = "";
-		ZkClient zkClient = new ZkClient(serverList);
-		//´´½¨½Úµã
-		String PATH = "";
+	String serverList = "";
+	String PATH = "";
+	ZkClient zkClient = new ZkClient(serverList);
+	
+	//è®¢é˜…å­èŠ‚ç‚¹å˜åŒ–
+	private void subscribeChildrenStateChangeDemo(){
+		zkClient.subscribeChildChanges(PATH, new IZkChildListener() {
+			
+			@Override
+			public void handleChildChange(String arg0, List<String> arg1)
+					throws Exception {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+	}
+	//è®¢é˜…èŠ‚ç‚¹æ•°æ®çš„å˜åŒ–
+	private void subscribeDataChangesDemo(){
+		zkClient.subscribeDataChanges(PATH, new IZkDataListener() {
+			
+			@Override
+			public void handleDataDeleted(String arg0) throws Exception {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void handleDataChange(String arg0, Object arg1) throws Exception {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+	}
+	
+	//è®¢é˜…èŠ‚ç‚¹è¿æ¥åŠçŠ¶æ€çš„å˜åŒ–
+	private void subscribeNodeConnectStataDemo(){
+		zkClient.subscribeStateChanges(new IZkStateListener() {
+			
+			@Override
+			public void handleStateChanged(KeeperState arg0) throws Exception {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void handleSessionEstablishmentError(Throwable arg0)
+					throws Exception {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void handleNewSession() throws Exception {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+	}
+	
+	private void demo(){
+		//åˆ›å»ºèŠ‚ç‚¹
 		zkClient.createPersistent(PATH);
-		//´´½¨×Ó½Úµã
+		//åˆ›å»ºå­èŠ‚ç‚¹
 		zkClient.create(PATH+"/child", "child znode", CreateMode.EPHEMERAL);
-		//»ñµÃ×Ó½Úµã
+		//è·å¾—å­èŠ‚ç‚¹
 		List<String> children = zkClient.getChildren(PATH);
-		//»ñµÃ×Ó½Úµã¸öÊı
+		//è·å¾—å­èŠ‚ç‚¹ä¸ªæ•°
 		int childCount = zkClient.countChildren(PATH);
-		//ÅĞ¶Ï½ÚµãÊÇ·ñ´æÔÚ
+		//åˆ¤æ–­èŠ‚ç‚¹æ˜¯å¦å­˜åœ¨
 		zkClient.exists(PATH);
-		//Ğ´ÈëÊı¾İ
+		//å†™å…¥æ•°æ®
 		zkClient.writeData(PATH+"/child", "hello everyone");
-		//¶ÁÈ¡½ÚµãÊı¾İ
+		//è¯»å–èŠ‚ç‚¹æ•°æ®
 		Object obj = zkClient.readData(PATH+"/child");
-		//É¾³ı½Úµã
+		//åˆ é™¤èŠ‚ç‚¹
 		zkClient.delete(PATH+"/child");
+		
+	}
+	public static void main(String[] args) {
 		
 	}
 }
