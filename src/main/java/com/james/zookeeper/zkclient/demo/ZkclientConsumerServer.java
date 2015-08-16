@@ -38,12 +38,20 @@ public class ZkclientConsumerServer {
 					throws Exception {
 				// TODO Auto-generated method stub
 				serviceList = currentChilds;
-				System.out.println(serviceList.toString());
+				System.out.println("SERVICE_PATH clild:"+serviceList.toString());
 			}
 		});
 	}
+	
 	public static void main(String[] args) {
 		ZkclientConsumerServer consumer = new ZkclientConsumerServer();
-		consumer.demo();
+		while(true){
+			consumer.demo();
+			try {
+				Thread.sleep(3000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 }

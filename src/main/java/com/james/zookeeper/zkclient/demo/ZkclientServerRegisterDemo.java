@@ -15,7 +15,7 @@ import org.apache.log4j.Logger;
  * @date 2015年8月13日 下午3:57:36
  *
  */
-public class ZkclientServerRegisterDemo {
+public class ZkclientServerRegisterDemo implements Runnable{
 	final static Logger logger = Logger.getLogger(ZkclientServerRegisterDemo.class);
 	String serverList = "10.0.1.44:2181";
 	String serviceName = "service1";
@@ -37,13 +37,28 @@ public class ZkclientServerRegisterDemo {
 		zkClient.delete(PATH+"/"+serviceName+"/"+ip);
 		//创建当前服务器节点
 		zkClient.createEphemeral(PATH+"/"+serviceName+"/"+ip);
+		System.out.println("regist server1 child ip");
+		handle();
 	}
-	public static void main(String[] args) {
-		ZkclientServerRegisterDemo demo = new ZkclientServerRegisterDemo();
-		try {
-			demo.demo();
+	
+	/**
+     * this is very importent 
+     */
+    public void handle() throws InterruptedException {
+        Thread.sleep(Long.MAX_VALUE);
+    }
+    
+    @Override
+    public void run() {
+    	try {
+			demo();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+    }
+	
+	public static void main(String[] args) {
+		ZkclientServerRegisterDemo demo = new ZkclientServerRegisterDemo();
+		new Thread(demo).start();
 	}
 }
